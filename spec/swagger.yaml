@@ -3,13 +3,7 @@ info:
   description: | 
     # Introduction
     This document describes the programmatic interface of the Traduttore service
-    ## Data Sharing
-    ![Data sharing conceptual model](https://docs.google.com/a/unitn.it/uc?id=0B5ntwqwn5LxAWWluVm5zYXhqSU0&export=download)
-    ## Activity Participation
-    ![Data sharing conceptual model](https://docs.google.com/a/unitn.it/uc?id=0B5ntwqwn5LxAdENBRElETjNCMmc&export=download)
-    ## Feedback
-    ![Data sharing conceptual model](https://docs.google.com/a/unitn.it/uc?id=0B5ntwqwn5LxAdm9VcmYxOTdzRTA&export=download)     
-    
+
   version: 1.0.0
   title: Traduttore API
   # put the contact info for your development or API team
