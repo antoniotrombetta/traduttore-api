@@ -1,1967 +1,1916 @@
-swagger: '2.0'
+---
+swagger: "2.0"
 info:
-  description: | 
-    # Introduction
-    This document describes the programmatic interface of the Traduttore service
-
-  version: 1.0.0
-  title: Traduttore API
-  # put the contact info for your development or API team
+  description: "# Introduction\nThis document describes the programmatic interface\
+    \ of the Traduttore service\n"
+  version: "1.0.0"
+  title: "Traduttore API"
   contact:
-    email: baez@disi.unitn.it
-
+    email: "baez@disi.unitn.it"
   license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-
-# tags are used for organizing operations
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "virtserver.swaggerhub.com"
+basePath: "/mbaezpy/Traduttore/1.0.0"
 tags:
-- name: cartella
-  description: These set of operations serve the integration needs with the Cartella system 
-- name: mobile
-  description: | 
-    These set of operations serve the needs of the Traduttore Mobile application
-- name: admins
-  description: These set of operations serve the needs of the Traduttore admin app 
-
-responses:
-  AccessForbidden:
-    description: Access forbidden, invalid authorisation header
-    schema:
-      $ref: '#/definitions/Error'
-      
-  NotFound: 
-    description: Resource was not found
-    schema: 
-      $ref: '#/definitions/Error'
-    
-  InvalidDataError: 
-    description: Invalid data was sent
-    schema: 
-      $ref: '#/definitions/Error'
-      
-  BadRequest: 
-    description: Request was sent in incorrect format
-    schema: 
-      $ref: '#/definitions/Error'      
-
-parameters:
-  limitCollection:
-    name: limit
-    in: query
-    description: Max number of records to return
-    type: integer
-    format: int32
-    
-  skipCollection:      
-    name: skip
-    in: query
-    description: Number of records to skip 
-    type: integer
-    format: int32 
-
+- name: "cartella"
+  description: "These set of operations serve the integration needs with the Cartella\
+    \ system"
+- name: "mobile"
+  description: "These set of operations serve the needs of the Traduttore Mobile application\n"
+- name: "admins"
+  description: "These set of operations serve the needs of the Traduttore admin app"
+schemes:
+- "https"
 paths:
   /sync/shareable:
     get:
       tags:
-      - cartella
-      summary: Get the sharing information for an event and resident
-      description: |
-        This function provides information about whether to share a specific event instance, and the sharing settings, including how, and with whom to share.
+      - "cartella"
+      summary: "Get the sharing information for an event and resident"
+      description: "This function provides information about whether to share a specific\
+        \ event instance, and the sharing settings, including how, and with whom to\
+        \ share.\n"
+      operationId: "syncShareableGET"
       produces:
-      - application/json
+      - "application/json"
       parameters:
-      - name: eventTypeId
-        in: query
-        description: ID of the event type
+      - name: "eventTypeId"
+        in: "query"
+        description: "ID of the event type"
         required: true
-        type: string
-        format: uuid
-      - name: residentId
-        in: query
-        description: ID of the resident
+        type: "string"
+        format: "uuid"
+      - name: "residentId"
+        in: "query"
+        description: "ID of the resident"
         required: true
-        type: string
-        format: uuid        
+        type: "string"
+        format: "uuid"
       responses:
         200:
-          description: Successful operation
+          description: "Successful operation"
           schema:
-            $ref: '#/definitions/SynchInfo'
+            $ref: "#/definitions/SynchInfo"
         400:
-          $ref: '#/responses/BadRequest'  
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'
-          
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Cartella"
   /sync/events:
-    post:
-      tags:
-      - cartella          
-      summary: Push events from the Cartella to the Collegamenti platform
-      description: |
-        This operation allows NH staff to push events to the Collegamenti platform, so it can be distributed to the family members.
-      consumes:
-      - application/json
-      parameters:
-      - in: body
-        name: body
-        description: Event to be pushed
-        required: true
-        schema:
-          $ref: '#/definitions/EventSharing'      
-      responses:
-        201:
-          description: Event was successfully created
-          headers:
-            Location:
-              type: string
-              format: uri
-              description: URI to the newly created resource
-        400:
-          $ref: '#/responses/BadRequest'           
-        401:
-          $ref: '#/responses/AccessForbidden'   
-        422:
-          $ref: '#/responses/InvalidDataError'   
     get:
       tags:
-      - cartella          
-      summary: Search events, including pending commjunications
-      description: |
-        This function allows the NH Staff to search events, and especially pending communications that have been delegated to their role.
+      - "cartella"
+      summary: "Search events, including pending commjunications"
+      description: "This function allows the NH Staff to search events, and especially\
+        \ pending communications that have been delegated to their role.\n"
+      operationId: "syncEventsGET"
       produces:
-      - application/json
+      - "application/json"
       parameters:
-      - name: delegatedTo
-        in: query
-        description: ID of user to which the event is delegated 
+      - name: "delegatedTo"
+        in: "query"
+        description: "ID of user to which the event is delegated"
         required: true
-        type: string
-        format: uuid
-      - name: optSnooze
-        in: query
-        description: ID of user to which the event is delegated 
-        type: boolean
-      - $ref: '#/parameters/limitCollection'
-      - $ref: '#/parameters/skipCollection'
-
+        type: "string"
+        format: "uuid"
+      - name: "optSnooze"
+        in: "query"
+        description: "ID of user to which the event is delegated"
+        required: false
+        type: "boolean"
+      - name: "limit"
+        in: "query"
+        description: "Max number of records to return"
+        required: false
+        type: "integer"
+        format: "int32"
+      - name: "skip"
+        in: "query"
+        description: "Number of records to skip"
+        required: false
+        type: "integer"
+        format: "int32"
       responses:
         200:
-          description: Successful operation   
+          description: "Successful operation"
           schema:
-            type : array
+            type: "array"
             items:
-              $ref: '#/definitions/EventSharing'   
+              $ref: "#/definitions/EventSharing"
         401:
-          $ref: '#/responses/AccessForbidden'                 
-          
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Cartella"
+    post:
+      tags:
+      - "cartella"
+      summary: "Push events from the Cartella to the Collegamenti platform"
+      description: "This operation allows NH staff to push events to the Collegamenti\
+        \ platform, so it can be distributed to the family members.\n"
+      operationId: "syncEventsPOST"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Event to be pushed"
+        required: true
+        schema:
+          $ref: "#/definitions/EventSharing"
+      responses:
+        201:
+          description: "Event was successfully created"
+          headers:
+            Location:
+              type: "string"
+              format: "uri"
+              description: "URI to the newly created resource"
+        400:
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
+        422:
+          description: "Invalid data was sent"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Cartella"
   /sync/event/{eventId}:
     get:
       tags:
-      - cartella          
-      summary: Retrieve an event, along with the list of related communications
-      description: |
-        This function retrieves an event, along with the previous updates / communications (or sharing) of that event with the family members.
+      - "cartella"
+      summary: "Retrieve an event, along with the list of related communications"
+      description: "This function retrieves an event, along with the previous updates\
+        \ / communications (or sharing) of that event with the family members.\n"
+      operationId: "syncEventEventIdGET"
       produces:
-      - application/json
+      - "application/json"
       parameters:
-      - name: eventId
-        in: path
-        description: ID of the event 
+      - name: "eventId"
+        in: "path"
+        description: "ID of the event"
         required: true
-        type: string
-        format: uuid
+        type: "string"
+        format: "uuid"
       responses:
         200:
-          description: Successful operation   
+          description: "Successful operation"
           schema:
-            $ref: '#/definitions/EventSharing'  
+            $ref: "#/definitions/EventSharing"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'          
-            
-  /sync/event/{eventId}/updates:            
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Cartella"
+  /sync/event/{eventId}/updates:
     post:
       tags:
-      - cartella          
-      summary: Pushes event updates from the Cartella to the Collegamenti platform
-      description: |
-        This function allows NH staff to push follow up on events to the Collegamenti platform, so it can be distributed to the family members.
+      - "cartella"
+      summary: "Pushes event updates from the Cartella to the Collegamenti platform"
+      description: "This function allows NH staff to push follow up on events to the\
+        \ Collegamenti platform, so it can be distributed to the family members.\n"
+      operationId: "syncEventEventIdUpdatesPOST"
       consumes:
-      - application/json
+      - "application/json"
       parameters:
-      - name: eventId
-        in: path
-        description: ID of the event
+      - name: "eventId"
+        in: "path"
+        description: "ID of the event"
         required: true
-        type: string
-        format: uuid      
-      - in: body
-        name: body
-        description: Update to be pushed
+        type: "string"
+        format: "uuid"
+      - in: "body"
+        name: "body"
+        description: "Update to be pushed"
         required: true
         schema:
-          $ref: '#/definitions/EventSharingUpdate'      
+          $ref: "#/definitions/EventSharingUpdate"
       responses:
         201:
-          description: Successful operation 
+          description: "Successful operation"
           headers:
             Location:
-              type: string
-              format: uri
-              description: URI to the newly created resource          
+              type: "string"
+              format: "uri"
+              description: "URI to the newly created resource"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'          
-          
-  /sync/event_update/{updateId}:            
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Cartella"
+  /sync/event_update/{updateId}:
     put:
       tags:
-      - cartella          
-      summary: Updates pending event updates, especially to decide on whether to share or cancel pending communications
-      description: |
-        This function allows NH staff to decide on the pending communications, either to cancell the sharing or to push them to the family members.
+      - "cartella"
+      summary: "Updates pending event updates, especially to decide on whether to\
+        \ share or cancel pending communications"
+      description: "This function allows NH staff to decide on the pending communications,\
+        \ either to cancell the sharing or to push them to the family members.\n"
+      operationId: "syncEvent_updateUpdateIdPUT"
       consumes:
-      - application/json
+      - "application/json"
       parameters:
-      - name: updateId
-        in: path
-        description: ID of the event update
+      - name: "updateId"
+        in: "path"
+        description: "ID of the event update"
         required: true
-        type: string
-        format: uuid      
-      - in: body
-        name: body
-        description: Update to be pushed
+        type: "string"
+        format: "uuid"
+      - in: "body"
+        name: "body"
+        description: "Update to be pushed"
         required: true
         schema:
-          $ref: '#/definitions/EventSharingUpdate'      
+          $ref: "#/definitions/EventSharingUpdate"
       responses:
         200:
-          description: Successful operation  
+          description: "Successful operation"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'            
-
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Cartella"
   /calendar:
     get:
       tags:
-      - admins
-      - mobile
-      summary: Get a filtered list of events (pneeds or hstatus) and activities
-      description: |
-        Filters the list of activities and events, filtered by type of "entry" (pneeds, hstatus, activities)  and date
-      operationId: getCalendarEvents
+      - "admins"
+      - "mobile"
+      summary: "Get a filtered list of events (pneeds or hstatus) and activities"
+      description: "Filters the list of activities and events, filtered by type of\
+        \ \"entry\" (pneeds, hstatus, activities)  and date\n"
+      operationId: "getCalendarEvents"
       produces:
-      - application/json
+      - "application/json"
       parameters:
-      - name: calendarType
-        in: query
-        description: |
-          Type of calendar entry to be retrieved ((pneeds, hstatus, activities)
-        type: array
+      - name: "calendarType"
+        in: "query"
+        description: "Type of calendar entry to be retrieved ((pneeds, hstatus, activities)\n"
+        required: false
+        type: "array"
         items:
-          type: string
+          type: "string"
           enum:
-          - pneeds
-          - hstatus
-          - activities
-        collectionFormat: multi
-      - name: dateFrom
-        in: query
-        description: Start date of calendar entries 
-        type: string
-        format: date-time
+          - "pneeds"
+          - "hstatus"
+          - "activities"
+        collectionFormat: "multi"
+      - name: "dateFrom"
+        in: "query"
+        description: "Start date of calendar entries"
         required: true
-      - name: dateTo
-        in: query
-        description: End date of calendar entries 
-        type: string
-        format: date-time  
+        type: "string"
+        format: "date-time"
+      - name: "dateTo"
+        in: "query"
+        description: "End date of calendar entries"
         required: true
-      - $ref: '#/parameters/limitCollection'
-      - $ref: '#/parameters/skipCollection'        
+        type: "string"
+        format: "date-time"
+      - name: "limit"
+        in: "query"
+        description: "Max number of records to return"
+        required: false
+        type: "integer"
+        format: "int32"
+      - name: "skip"
+        in: "query"
+        description: "Number of records to skip"
+        required: false
+        type: "integer"
+        format: "int32"
       responses:
         200:
-          description: Successful operation
+          description: "Successful operation"
           schema:
-            type: array
+            type: "array"
             items:
-              $ref: '#/definitions/CalendarEntry'
+              $ref: "#/definitions/CalendarEntry"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
-
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Admins"
   /pneeds/{eventId}:
     get:
       tags:
-      - mobile
-      summary: Get the a Primary Need event 
-      operationId: getPNEvent
-      description: |
-        Retrieves the PN event identified by eventId
+      - "mobile"
+      summary: "Get the a Primary Need event"
+      description: "Retrieves the PN event identified by eventId\n"
+      operationId: "getPNEvent"
       produces:
-      - application/json
+      - "application/json"
       parameters:
-      - name: eventId
-        in: path
-        description: ID of PN event to retrieve
+      - name: "eventId"
+        in: "path"
+        description: "ID of PN event to retrieve"
         required: true
-        type: string
-        format: uuid
+        type: "string"
+        format: "uuid"
       responses:
         200:
-          description: Successful operation
+          description: "Successful operation"
           schema:
-            $ref: '#/definitions/PrimaryNeed'
+            $ref: "#/definitions/PrimaryNeed"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'  
-
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Mobile"
   /hstatus/{eventId}:
     get:
       tags:
-      - mobile
-      summary: Get a Health status event 
-      operationId: getHSEvent
-      description: |
-        Obtains the HS event identified by eventId
+      - "mobile"
+      summary: "Get a Health status event"
+      description: "Obtains the HS event identified by eventId\n"
+      operationId: "getHSEvent"
       produces:
-      - application/json
+      - "application/json"
       parameters:
-      - name: eventId
-        in: path
-        description: ID of HS event to retrieve
+      - name: "eventId"
+        in: "path"
+        description: "ID of HS event to retrieve"
         required: true
-        type: string
-        format: uuid
+        type: "string"
+        format: "uuid"
       responses:
         200:
-          description: successful operation
+          description: "successful operation"
           schema:
-            $ref: '#/definitions/HealthStatus'
+            $ref: "#/definitions/HealthStatus"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'  
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Mobile"
   /activity/{activityId}:
     get:
       tags:
-      - mobile
-      - admins
-      summary: Get an activity
-      operationId: getActivity
-      description: |
-        Retrieves the activity identified by eventId
+      - "mobile"
+      - "admins"
+      summary: "Get an activity"
+      description: "Retrieves the activity identified by eventId\n"
+      operationId: "getActivity"
       produces:
-      - application/json
+      - "application/json"
       parameters:
-      - name: activityId
-        in: path
-        description: ID of the activity to retrieve
+      - name: "activityId"
+        in: "path"
+        description: "ID of the activity to retrieve"
         required: true
-        type: string
-        format: uuid
+        type: "string"
+        format: "uuid"
       responses:
         200:
-          description: Successful operation
+          description: "Successful operation"
           schema:
-            $ref: '#/definitions/Activity'
+            $ref: "#/definitions/Activity"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Mobile"
     put:
       tags:
-      - admins
-      summary: Update an existing activity  
-      operationId: updateActivity
+      - "admins"
+      summary: "Update an existing activity"
+      operationId: "updateActivity"
       consumes:
-      - application/json
+      - "application/json"
       parameters:
-      - name: activityId
-        in: path
-        description: ID of the activity to retrieve
+      - name: "activityId"
+        in: "path"
+        description: "ID of the activity to retrieve"
         required: true
-        type: string
-        format: uuid      
-      - in: body
-        name: body
-        description: Updates to the activity
+        type: "string"
+        format: "uuid"
+      - in: "body"
+        name: "body"
+        description: "Updates to the activity"
         required: true
         schema:
-          $ref: '#/definitions/Activity'
+          $ref: "#/definitions/Activity"
       responses:
         204:
-          description: Successful operation          
+          description: "Successful operation"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'          
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Admins"
   /activity:
     post:
       tags:
-      - admins
-      summary: Create a new activity 
-      operationId: createActivity
+      - "admins"
+      summary: "Create a new activity"
+      operationId: "createActivity"
       consumes:
-      - application/json
+      - "application/json"
       parameters:
-      - in: body
-        name: body
-        description: Activity to be created
+      - in: "body"
+        name: "body"
+        description: "Activity to be created"
         required: true
         schema:
-          $ref: '#/definitions/Activity'
+          $ref: "#/definitions/Activity"
       responses:
         201:
-          description: Successful operation   
+          description: "Successful operation"
           headers:
             Location:
-              type: string
-              format: uri
-              description: URI to the newly created resource             
+              type: "string"
+              format: "uri"
+              description: "URI to the newly created resource"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
-          
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Admins"
   /activity/{activityId}/editions:
     get:
       tags:
-      - mobile
-      - admins
-      summary: Get the list of editions of an activity
-      operationId: getActivityEditions
-      description: |
-        Retrieves the list of editions of an activity
+      - "mobile"
+      - "admins"
+      summary: "Get the list of editions of an activity"
+      description: "Retrieves the list of editions of an activity\n"
+      operationId: "getActivityEditions"
       produces:
-      - application/json
+      - "application/json"
       parameters:
-      - name: activityId
-        in: path
-        description: ID of the activity
+      - name: "activityId"
+        in: "path"
+        description: "ID of the activity"
         required: true
-        type: string
-        format: uuid
+        type: "string"
+        format: "uuid"
       responses:
         200:
-          description: successful operation
+          description: "successful operation"
           schema:
-            type : array
-            items :
-              $ref: '#/definitions/ActivityEdition'
+            type: "array"
+            items:
+              $ref: "#/definitions/ActivityEdition"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'   
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Mobile"
     post:
       tags:
-      - admins
-      summary: Create a new activity edition
-      operationId: createActivityEdition
-      description: |
-        Creates a new activity edition for the given activity      
+      - "admins"
+      summary: "Create a new activity edition"
+      description: "Creates a new activity edition for the given activity      \n"
+      operationId: "createActivityEdition"
       consumes:
-      - application/json
+      - "application/json"
       parameters:
-      - name: activityId
-        in: path
-        description: ID of the activity
+      - name: "activityId"
+        in: "path"
+        description: "ID of the activity"
         required: true
-        type: string
-        format: uuid
-      - in: body
-        name: body
-        description: Activity Edition to be created
+        type: "string"
+        format: "uuid"
+      - in: "body"
+        name: "body"
+        description: "Activity Edition to be created"
         required: true
         schema:
-          $ref: '#/definitions/ActivityEdition'                
+          $ref: "#/definitions/ActivityEdition"
       responses:
         201:
-          description: Successful operation
+          description: "Successful operation"
           headers:
             Location:
-              type: string
-              format: uri
-              description: URI to the newly created resource             
+              type: "string"
+              format: "uri"
+              description: "URI to the newly created resource"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound' 
-          
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Admins"
   /activity/{activityId}/appointments:
-    post:
-      tags:
-      - mobile
-      summary: Create an appointment request
-      operationId: createAppointment
-      description: |
-        Creates a new appointment request for the given activity. Appointment requests are allowed only with "Consultation" activities (canRequestAppointment=true)
-      consumes:
-      - application/json
-      parameters:
-      - name: activityId
-        in: path
-        description: ID of the activity
-        required: true
-        type: string
-        format: uuid
-      - in: body
-        name: body
-        description: Appointment request to be created
-        required: true
-        schema:
-          $ref: '#/definitions/Consultation'               
-      responses:
-        201:
-          description: Successful operation
-          headers:
-            Location:
-              type: string
-              format: uri
-              description: URI to the newly created resource             
-        400:
-          $ref: '#/responses/BadRequest'           
-        401:
-          $ref: '#/responses/AccessForbidden'   
-        404:
-          $ref: '#/responses/NotFound' 
     get:
       tags:
-      - admins
-      summary: Get the activity appointments
-      operationId: getActivityAppointments
-      description: |
-        Retrieves the list of appointment request for a given activity         
+      - "admins"
+      summary: "Get the activity appointments"
+      description: "Retrieves the list of appointment request for a given activity\
+        \         \n"
+      operationId: "getActivityAppointments"
       produces:
-      - application/json
+      - "application/json"
       parameters:
-      - name: activityId
-        in: path
-        description: ID of the Appointment request 
+      - name: "activityId"
+        in: "path"
+        description: "ID of the Appointment request"
         required: true
-        type: string
-        format: uuid
+        type: "string"
+        format: "uuid"
       responses:
         200:
-          description: Successful operation
+          description: "Successful operation"
           schema:
-            type: array
+            type: "array"
             items:
-              $ref: '#/definitions/Consultation'
+              $ref: "#/definitions/Consultation"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'
-          
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Admins"
+    post:
+      tags:
+      - "mobile"
+      summary: "Create an appointment request"
+      description: "Creates a new appointment request for the given activity. Appointment\
+        \ requests are allowed only with \"Consultation\" activities (canRequestAppointment=true)\n"
+      operationId: "createAppointment"
+      consumes:
+      - "application/json"
+      parameters:
+      - name: "activityId"
+        in: "path"
+        description: "ID of the activity"
+        required: true
+        type: "string"
+        format: "uuid"
+      - in: "body"
+        name: "body"
+        description: "Appointment request to be created"
+        required: true
+        schema:
+          $ref: "#/definitions/Consultation"
+      responses:
+        201:
+          description: "Successful operation"
+          headers:
+            Location:
+              type: "string"
+              format: "uri"
+              description: "URI to the newly created resource"
+        400:
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
+        404:
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Mobile"
   /activity_edition/{editionId}:
     get:
       tags:
-      - admins
-      - mobile
-      summary: Get the activity edition
-      operationId: getActivityEdition
-      description: |
-        Retrieves an activity edition          
+      - "admins"
+      - "mobile"
+      summary: "Get the activity edition"
+      description: "Retrieves an activity edition          \n"
+      operationId: "getActivityEdition"
       produces:
-      - application/json
+      - "application/json"
       parameters:
-      - name: editionId
-        in: path
-        description: ID of the activity edition 
+      - name: "editionId"
+        in: "path"
+        description: "ID of the activity edition"
         required: true
-        type: string
-        format: uuid
+        type: "string"
+        format: "uuid"
       responses:
         200:
-          description: successful operation
+          description: "successful operation"
           schema:
-            $ref: '#/definitions/ActivityEdition' 
+            $ref: "#/definitions/ActivityEdition"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'   
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Admins"
     put:
       tags:
-      - admins
-      summary: Update the activity edition
-      operationId: updateActivityEdition
-      description: |
-        Updates the activity edition referenced by the uri
+      - "admins"
+      summary: "Update the activity edition"
+      description: "Updates the activity edition referenced by the uri\n"
+      operationId: "updateActivityEdition"
       consumes:
-      - application/json
+      - "application/json"
       parameters:
-      - name: editionId
-        in: path
-        description: ID of the activity edition to be updated
+      - name: "editionId"
+        in: "path"
+        description: "ID of the activity edition to be updated"
         required: true
-        type: string
-        format: uuid
-      - in: body
-        name: body
-        description: Activity Edition update
+        type: "string"
+        format: "uuid"
+      - in: "body"
+        name: "body"
+        description: "Activity Edition update"
         required: true
         schema:
-          $ref: '#/definitions/ActivityEdition'                
+          $ref: "#/definitions/ActivityEdition"
       responses:
         204:
-          description: Successful operation
+          description: "Successful operation"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound' 
-          
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Admins"
   /activity_edition/{editionId}/participations:
     get:
       tags:
-      - admins
-      - mobile
-      summary: Get the list of participants to an activity edition
-      operationId: getActivityEditionParticipations
-      description: |
-        Retrieves the list of participants to the given activity edition
+      - "admins"
+      - "mobile"
+      summary: "Get the list of participants to an activity edition"
+      description: "Retrieves the list of participants to the given activity edition\n"
+      operationId: "getActivityEditionParticipations"
       produces:
-      - application/json
+      - "application/json"
       parameters:
-      - name: editionId
-        in: path
-        description: ID of the activity edition 
+      - name: "editionId"
+        in: "path"
+        description: "ID of the activity edition"
         required: true
-        type: string
-        format: uuid
+        type: "string"
+        format: "uuid"
       responses:
         200:
-          description: Successful operation
+          description: "Successful operation"
           schema:
-            type: array
+            type: "array"
             items:
-              $ref: '#/definitions/ActivityParticipation' 
+              $ref: "#/definitions/ActivityParticipation"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'    
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Admins"
     post:
       tags:
-      - admins
-      - mobile
-      summary: Create an activity participation
-      operationId: addActivityEditionParticipant
-      description: |
-        Creates an activity participation on the given activity edition
+      - "admins"
+      - "mobile"
+      summary: "Create an activity participation"
+      description: "Creates an activity participation on the given activity edition\n"
+      operationId: "addActivityEditionParticipant"
       consumes:
-      - application/json
+      - "application/json"
       parameters:
-      - name: editionId
-        in: path
-        description: ID of the activity edition
+      - name: "editionId"
+        in: "path"
+        description: "ID of the activity edition"
         required: true
-        type: string
-        format: uuid
-      - in: body
-        name: body
-        description: Participation to be added
+        type: "string"
+        format: "uuid"
+      - in: "body"
+        name: "body"
+        description: "Participation to be added"
         required: true
         schema:
-          $ref: '#/definitions/ActivityParticipation'                 
+          $ref: "#/definitions/ActivityParticipation"
       responses:
         201:
-          description: Successful operation
+          description: "Successful operation"
           headers:
             Location:
-              type: string
-              format: uri
-              description: URI to the newly created resource                 
+              type: "string"
+              format: "uri"
+              description: "URI to the newly created resource"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'         
-          
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Admins"
   /activity_participation/{participationId}:
     get:
       tags:
-      - admins
-      - mobile
-      summary: Get an activity participation
-      operationId: getActivityEditionParticipation
-      description: |
-        Retrives the activity participation identified by the URI      
+      - "admins"
+      - "mobile"
+      summary: "Get an activity participation"
+      description: "Retrives the activity participation identified by the URI    \
+        \  \n"
+      operationId: "getActivityEditionParticipation"
       produces:
-      - application/json
+      - "application/json"
       parameters:
-      - name: participationId
-        in: path
-        description: ID of the activity edition 
+      - name: "participationId"
+        in: "path"
+        description: "ID of the activity edition"
         required: true
-        type: string
-        format: uuid
+        type: "string"
+        format: "uuid"
       responses:
         200:
-          description: successful operation
+          description: "successful operation"
           schema:
-            $ref: '#/definitions/ActivityParticipation' 
+            $ref: "#/definitions/ActivityParticipation"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'   
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Admins"
     put:
       tags:
-      - admins
-      - mobile
-      summary: Update an activity participation
-      operationId: updateActivityEditionParticipation
-      description: |
-        Updates the activity participation identified by the URI         
+      - "admins"
+      - "mobile"
+      summary: "Update an activity participation"
+      description: "Updates the activity participation identified by the URI     \
+        \    \n"
+      operationId: "updateActivityEditionParticipation"
       consumes:
-      - application/json
+      - "application/json"
       parameters:
-      - name: participationId
-        in: path
-        description: ID of the activity edition to be updated
+      - name: "participationId"
+        in: "path"
+        description: "ID of the activity edition to be updated"
         required: true
-        type: string
-        format: uuid
-      - in: body
-        name: body
-        description: Participation to be updated
+        type: "string"
+        format: "uuid"
+      - in: "body"
+        name: "body"
+        description: "Participation to be updated"
         required: true
         schema:
-          $ref: '#/definitions/ActivityParticipation'
+          $ref: "#/definitions/ActivityParticipation"
       responses:
         204:
-          description: Successful operation
+          description: "Successful operation"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'  
-          
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Admins"
   /appointment/{appointmentId}:
     get:
       tags:
-      - mobile
-      - admins
-      summary: Get an appointment request
-      operationId: getAppointment
-      description: |
-        Gets the appointment request identified by the URI
+      - "mobile"
+      - "admins"
+      summary: "Get an appointment request"
+      description: "Gets the appointment request identified by the URI\n"
+      operationId: "getAppointment"
       consumes:
-      - application/json
+      - "application/json"
       parameters:
-      - name: appointmentId
-        in: path
-        description: ID of the appointment
+      - name: "appointmentId"
+        in: "path"
+        description: "ID of the appointment"
         required: true
-        type: string
-        format: uuid
+        type: "string"
+        format: "uuid"
       responses:
         200:
-          description: Successful operation
+          description: "Successful operation"
           schema:
-            $ref: '#/definitions/Consultation'            
+            $ref: "#/definitions/Consultation"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'  
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Mobile"
     put:
       tags:
-      - mobile
-      - admins
-      summary: Update an appointment request
-      operationId: updateAppointment
-      description: |
-        Updates the appointment request identified by the URI
+      - "mobile"
+      - "admins"
+      summary: "Update an appointment request"
+      description: "Updates the appointment request identified by the URI\n"
+      operationId: "updateAppointment"
       consumes:
-      - application/json
+      - "application/json"
       parameters:
-      - name: appointmentId
-        in: path
-        description: ID of the appointment
+      - name: "appointmentId"
+        in: "path"
+        description: "ID of the appointment"
         required: true
-        type: string
-        format: uuid
-      - in: body
-        name: body
-        description: Appointment request to be updated
+        type: "string"
+        format: "uuid"
+      - in: "body"
+        name: "body"
+        description: "Appointment request to be updated"
         required: true
         schema:
-          $ref: '#/definitions/Consultation'                
+          $ref: "#/definitions/Consultation"
       responses:
         204:
-          description: Successful operation
+          description: "Successful operation"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'  
-          
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Mobile"
   /feedbacks:
     get:
       tags:
-      - admins
-      - mobile
-      summary: Get the list of feedbacks by context
-      operationId: getFeedbacks
-      description: |
-        Gets and filter the feedbacks by context (feedback on staff, pneeds, hstatus, activity)        
+      - "admins"
+      - "mobile"
+      summary: "Get the list of feedbacks by context"
+      description: "Gets and filter the feedbacks by context (feedback on staff, pneeds,\
+        \ hstatus, activity)        \n"
+      operationId: "getFeedbacks"
       produces:
-      - application/json
+      - "application/json"
       parameters:
-      - name: feedbackOn
-        in: query
-        description: Filter by context of feedback
-        type: array
-        collectionFormat: multi
-        items: 
-          type: string
-          enum: 
-            - staff
-            - pneeds
-            - hstatus
-            - activity
-      - $ref: '#/parameters/limitCollection'
-      - $ref: '#/parameters/skipCollection'          
+      - name: "feedbackOn"
+        in: "query"
+        description: "Filter by context of feedback"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+          enum:
+          - "staff"
+          - "pneeds"
+          - "hstatus"
+          - "activity"
+        collectionFormat: "multi"
+      - name: "limit"
+        in: "query"
+        description: "Max number of records to return"
+        required: false
+        type: "integer"
+        format: "int32"
+      - name: "skip"
+        in: "query"
+        description: "Number of records to skip"
+        required: false
+        type: "integer"
+        format: "int32"
       responses:
         200:
-          description: successful operation
+          description: "successful operation"
           schema:
-            type: array
+            type: "array"
             items:
-              $ref: '#/definitions/Feedback' 
+              $ref: "#/definitions/Feedback"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'                 
-  
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Admins"
     post:
       tags:
-      - mobile
-      summary: Create a feedback entry
-      operationId: createFeedback
-      description: |
-        Creates a contextual feedback         
+      - "mobile"
+      summary: "Create a feedback entry"
+      description: "Creates a contextual feedback         \n"
+      operationId: "createFeedback"
       consumes:
-      - application/json
+      - "application/json"
       parameters:
-      - in: body
-        name: body
-        description: Feedback to be added
+      - in: "body"
+        name: "body"
+        description: "Feedback to be added"
         required: true
         schema:
-          $ref: '#/definitions/Feedback'                 
+          $ref: "#/definitions/Feedback"
       responses:
         201:
-          description: Successful operation
+          description: "Successful operation"
           headers:
             Location:
-              type: string
-              format: uri
-              description: URI to the newly created resource              
+              type: "string"
+              format: "uri"
+              description: "URI to the newly created resource"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'   
-          
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Mobile"
   /feedback/{feedbackId}:
     get:
       tags:
-      - admins
-      - mobile
-      summary: Get a feedback
-      operationId: getFeedback
-      description: |
-        Retrieves the feedback referenced by the URI
+      - "admins"
+      - "mobile"
+      summary: "Get a feedback"
+      description: "Retrieves the feedback referenced by the URI\n"
+      operationId: "getFeedback"
       produces:
-      - application/json
+      - "application/json"
       parameters:
-      - name: feedbackId
-        in: path
-        description: ID of the feedback
+      - name: "feedbackId"
+        in: "path"
+        description: "ID of the feedback"
         required: true
-        type: string
-        format: uuid   
+        type: "string"
+        format: "uuid"
       responses:
         200:
-          description: successful operation
+          description: "successful operation"
           schema:
-            $ref: '#/definitions/Feedback' 
+            $ref: "#/definitions/Feedback"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'      
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Admins"
     put:
       tags:
-      - admins
-      - mobile
-      summary: Updates a feedback
-      operationId: updateFeedback
-      description: |
-        Updates the feedback referenced by the URI      
+      - "admins"
+      - "mobile"
+      summary: "Updates a feedback"
+      description: "Updates the feedback referenced by the URI      \n"
+      operationId: "updateFeedback"
       consumes:
-      - application/json      
+      - "application/json"
       parameters:
-      - name: feedbackId
-        in: path
-        description: ID of the feedback
+      - name: "feedbackId"
+        in: "path"
+        description: "ID of the feedback"
         required: true
-        type: string
-        format: uuid  
-      - in: body
-        name: body
-        description: Feedback to be updated
+        type: "string"
+        format: "uuid"
+      - in: "body"
+        name: "body"
+        description: "Feedback to be updated"
         required: true
         schema:
-          $ref: '#/definitions/Feedback'        
+          $ref: "#/definitions/Feedback"
       responses:
         204:
-          description: Successful operation
+          description: "Successful operation"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'      
-          
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Admins"
   /feedback/{feedbackId}/comments:
     get:
       tags:
-      - admins
-      - mobile
-      summary: Get comments related to a feedback
-      operationId: getFeedbackComments
-      description: |
-        Retrieves the list of comments on a given feedback         
+      - "admins"
+      - "mobile"
+      summary: "Get comments related to a feedback"
+      description: "Retrieves the list of comments on a given feedback         \n"
+      operationId: "getFeedbackComments"
       produces:
-      - application/json
+      - "application/json"
       parameters:
-      - name: feedbackId
-        in: path
-        description: ID of the feedback
+      - name: "feedbackId"
+        in: "path"
+        description: "ID of the feedback"
         required: true
-        type: string
-        format: uuid   
+        type: "string"
+        format: "uuid"
       responses:
         200:
-          description: successful operation
+          description: "successful operation"
           schema:
-            type: array
+            type: "array"
             items:
-              $ref: '#/definitions/Feedback' 
+              $ref: "#/definitions/Feedback"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'  
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Admins"
     post:
       tags:
-      - mobile
-      - admins
-      summary: Create a comment on a feedback
-      description: |
-        Creates a new comment in the context of the given feedback 
-      operationId: createFeedbackComment
+      - "mobile"
+      - "admins"
+      summary: "Create a comment on a feedback"
+      description: "Creates a new comment in the context of the given feedback \n"
+      operationId: "createFeedbackComment"
       consumes:
-      - application/json
+      - "application/json"
       parameters:
-      - name: feedbackId
-        in: path
-        description: ID of the feedback
+      - name: "feedbackId"
+        in: "path"
+        description: "ID of the feedback"
         required: true
-        type: string
-        format: uuid        
-      - in: body
-        name: body
-        description: Comment to be added
+        type: "string"
+        format: "uuid"
+      - in: "body"
+        name: "body"
+        description: "Comment to be added"
         required: true
         schema:
-          $ref: '#/definitions/UserComment'                 
+          $ref: "#/definitions/UserComment"
       responses:
         201:
-          description: Successful operation
+          description: "Successful operation"
           headers:
             Location:
-              type: string
-              format: uri
-              description: URI to the newly created resource                    
+              type: "string"
+              format: "uri"
+              description: "URI to the newly created resource"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'  
-          
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Mobile"
   /comment/{commentId}:
     get:
       tags:
-      - admins
-      - mobile
-      summary: Get a comment
-      operationId: getComment
-      description: |
-        Retrieves the comment referenced by the URI       
+      - "admins"
+      - "mobile"
+      summary: "Get a comment"
+      description: "Retrieves the comment referenced by the URI       \n"
+      operationId: "getComment"
       produces:
-      - application/json
+      - "application/json"
       parameters:
-      - name: commentId
-        in: path
-        description: ID of the comment
+      - name: "commentId"
+        in: "path"
+        description: "ID of the comment"
         required: true
-        type: string
-        format: uuid   
+        type: "string"
+        format: "uuid"
       responses:
         200:
-          description: successful operation
+          description: "successful operation"
           schema:
-            $ref: '#/definitions/UserComment' 
+            $ref: "#/definitions/UserComment"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'   
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Admins"
     put:
       tags:
-      - mobile
-      - admins
-      summary: Create a feedback entry
-      operationId: updateComment
-      description: |
-        Updates the comment referenced by the URI       
+      - "mobile"
+      - "admins"
+      summary: "Create a feedback entry"
+      description: "Updates the comment referenced by the URI       \n"
+      operationId: "updateComment"
       consumes:
-      - application/json
+      - "application/json"
       parameters:
-      - name: commentId
-        in: path
-        description: ID of the comment
+      - name: "commentId"
+        in: "path"
+        description: "ID of the comment"
         required: true
-        type: string
-        format: uuid          
-      - in: body
-        name: body
-        description: Comment to be added
+        type: "string"
+        format: "uuid"
+      - in: "body"
+        name: "body"
+        description: "Comment to be added"
         required: true
         schema:
-          $ref: '#/definitions/UserComment'                 
+          $ref: "#/definitions/UserComment"
       responses:
         204:
-          description: successful operation
+          description: "successful operation"
         400:
-          $ref: '#/responses/BadRequest'           
+          description: "Request was sent in incorrect format"
+          schema:
+            $ref: "#/definitions/Error"
         401:
-          $ref: '#/responses/AccessForbidden'   
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
         404:
-          $ref: '#/responses/NotFound'      
+          description: "Resource was not found"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Mobile"
   /rsa:
     get:
       tags:
-      - admins
-      - mobile
-      summary: Get information about the RSA
-      operationId: getRSAInfo
-      description: |
-        Gets general information about the RSA
+      - "admins"
+      - "mobile"
+      summary: "Get information about the RSA"
+      description: "Gets general information about the RSA\n"
+      operationId: "getRSAInfo"
       produces:
-      - application/json
+      - "application/json"
+      parameters: []
       responses:
         200:
-          description: successful operation
+          description: "successful operation"
           schema:
-            $ref: '#/definitions/RSAInfo'
+            $ref: "#/definitions/RSAInfo"
         401:
-          $ref: '#/responses/AccessForbidden'              
-          
-          
-# Definition of the Resource Model
-
+          description: "Access forbidden, invalid authorisation header"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Admins"
 definitions:
   PrimaryNeed:
-    type: object  
+    type: "object"
     properties:
-      id:
-        readOnly: true
-        allOf:
-          - $ref: '#/definitions/ResourceId'
-      createdOn:
-        description: Datetime when the event was created
-        allOf: 
-          - $ref: '#/definitions/ServerTimestamp'
-      type:
-        readOnly: true
-        description: Type of primary need event
-        allOf: 
-          - $ref: '#/definitions/EventType'
-      staffComment:
-        readOnly: true
-        description: Comments of the RSA Staff on the event
-        allOf: 
-          - $ref: '#/definitions/UserComment'
-      indicator :
-        readOnly: true
-        description: Main "numeric" indicator summarising the event
-        allOf: 
-          - $ref: '#/definitions/EventExtraParams'
       details:
-        type: array
-        readOnly: true  
-        description: Extra event-specific details
+        type: "array"
+        description: "Extra event-specific details"
         items:
-           $ref: '#/definitions/EventExtraParams'
-           
+          $ref: "#/definitions/EventExtraParams"
   HealthStatus:
-    type: object  
+    type: "object"
     properties:
-      id:
+      currentIndicators:
+        type: "array"
+        description: "Main \"numeric\" indicators summarising the event at this time"
+        items:
+          $ref: "#/definitions/EventExtraParams"
+      currentSeverity:
+        type: "string"
+        example: "mild consequences"
+        description: "Textual indication of the current severity of the event"
         readOnly: true
-        allOf:
-          - $ref: '#/definitions/ResourceId'
-      createdOn:
-        description: Datetime when the event was created
-        allOf: 
-          - $ref: '#/definitions/ServerTimestamp'
-      type:
-        readOnly: true
-        description: Type of health status event
-        allOf: 
-          - $ref: '#/definitions/EventType'
-      currentIndicators :
-        type : array
-        readOnly: true
-        description: Main "numeric" indicators summarising the event at this time
-        items :
-          $ref: '#/definitions/EventExtraParams'
-      currentSeverity : 
-        readOnly: true  
-        description: Textual indication of the current severity of the event
-        type : string
-        example: mild consequences
       updates:
-        type: array
+        type: "array"
         items:
-           $ref: '#/definitions/EventUpdate'           
-           
-  EventUpdate : 
-    type: object  
+          $ref: "#/definitions/EventUpdate"
+  EventUpdate:
+    type: "object"
     properties:
-      id:
-        readOnly: true
-        allOf:
-          - $ref: '#/definitions/ResourceId'
-      createdOn:
-        description: Datetime when the event update was created
-        allOf: 
-          - $ref: '#/definitions/ServerTimestamp'
-      staffComment:
-        readOnly: true
-        description: Comments of the RSA Staff on the event
-        allOf: 
-          - $ref: '#/definitions/UserComment'
-      indicators :
-        readOnly: true
-        type : array
-        description: Textual indication of the severity of the event
-        items :
-          $ref: '#/definitions/EventExtraParams'
-      severity :
-        readOnly: true
-        type : string
-        description: Textual indication of the current severity of the event
-        example: mild consequences
-      details:
-        readOnly: true
-        type: array
-        description: Extra event-specific details
+      indicators:
+        type: "array"
+        description: "Textual indication of the severity of the event"
         items:
-           $ref: '#/definitions/EventExtraParams'      
-  
+          $ref: "#/definitions/EventExtraParams"
+      severity:
+        type: "string"
+        example: "mild consequences"
+        description: "Textual indication of the current severity of the event"
+        readOnly: true
+      details:
+        type: "array"
+        description: "Extra event-specific details"
+        items:
+          $ref: "#/definitions/EventExtraParams"
   EventType:
     required:
-    - name
+    - "name"
     properties:
-      id:
-        readOnly: true
-        allOf:
-          - $ref: '#/definitions/ResourceId'
       name:
-        type: string
-        example: Lunch
+        type: "string"
+        example: "Lunch"
       description:
-        type: string
-        example:  Daily lunch
+        type: "string"
+        example: "Daily lunch"
       explanation:
-        type: string
-        example:  Meals are personalised to the nutritional needs of each resident. Residents are expected to eat 75% of their meals.
+        type: "string"
+        example: "Meals are personalised to the nutritional needs of each resident.\
+          \ Residents are expected to eat 75% of their meals."
       category:
-        type: string
-        example: Meals
-      startDate:
-        allOf: 
-          - $ref: '#/definitions/UserTimestamp'
+        type: "string"
+        example: "Meals"
       repeatsEvery:
-        type: string        
-        example:  daily
+        type: "string"
+        example: "daily"
         enum:
-        - daily
-        - weekly
-        - monthly        
-        - yearly
+        - "daily"
+        - "weekly"
+        - "monthly"
+        - "yearly"
       repeatsOn:
-        type: array        
-        example:  [Monday, Tuesday] 
+        type: "array"
+        example:
+        - "Monday"
+        - "Tuesday"
         items:
-          type: string
+          type: "string"
           enum:
-          - Monday
-          - Tuesday
-          - Wednesday
-          - Thursday
-          - Friday
-          - Saturday
-          - Sunday
-        
+          - "Monday"
+          - "Tuesday"
+          - "Wednesday"
+          - "Thursday"
+          - "Friday"
+          - "Saturday"
+          - "Sunday"
   EventExtraParams:
     required:
-    - name
+    - "name"
     properties:
-      id:
-        readOnly: true
-        allOf:
-          - $ref: '#/definitions/ResourceId'
       createdBy:
-        $ref: '#/definitions/User'
+        $ref: "#/definitions/User"
       name:
-        type: string
-        example:  Meal Completeness        
+        type: "string"
+        example: "Meal Completeness"
       description:
-        type: string
-        example:  Portion of the meal eaten
+        type: "string"
+        example: "Portion of the meal eaten"
       valueText:
-        type: string
+        type: "string"
       valueNum:
-        type: integer
-        format: int64 
-
+        type: "integer"
+        format: "int64"
   Activity:
     required:
-    - name
-    - duration
-    - description
-    - category
+    - "category"
+    - "description"
+    - "duration"
+    - "name"
     properties:
-      id:
-        allOf:
-          - $ref: '#/definitions/ResourceId'
-          - readOnly: true
-      createdOn:
-        allOf:
-          - $ref: '#/definitions/ServerTimestamp'   
       duration:
-        type: string  
+        type: "string"
       name:
-        type: string
-        example: Recita del rosario
+        type: "string"
+        example: "Recita del rosario"
       description:
-        type: string
-        example:  Recita del santo rosario organizato dalle nonne
+        type: "string"
+        example: "Recita del santo rosario organizato dalle nonne"
       benefits:
-        type: string
-        example:  Spiritual support is important
+        type: "string"
+        example: "Spiritual support is important"
       category:
-        type: string
-        example: Religious   
+        type: "string"
+        example: "Religious"
       repeatsEvery:
-        type: string        
-        example:  daily
+        type: "string"
+        example: "daily"
         enum:
-        - daily
-        - weekly
-        - monthly        
-        - yearly
+        - "daily"
+        - "weekly"
+        - "monthly"
+        - "yearly"
       repeatsOn:
-        type: array        
-        example:  [Monday, Tuesday] 
+        type: "array"
+        example:
+        - "Monday"
+        - "Tuesday"
         items:
-          type: string
+          type: "string"
           enum:
-          - Monday
-          - Tuesday
-          - Wednesday
-          - Thursday
-          - Friday
-          - Saturday
-          - Sunday
+          - "Monday"
+          - "Tuesday"
+          - "Wednesday"
+          - "Thursday"
+          - "Friday"
+          - "Saturday"
+          - "Sunday"
       location:
-        description: Default value      
-        type: string
-        example: Room 10, Building C  
-      canVolunteer: 
-        description: Default value
-        type: boolean
-      canParticipate: 
-        description: Default value
-        type: boolean
-      canRequestAppointments: 
-        description: Default value.       
-        type: boolean    
-      organisedBy:
-        allOf:
-          - $ref: '#/definitions/User'
-          - type : object
-            required:
-              - id
-      appointmentRequests : 
-        type: array
-        readOnly: true
+        type: "string"
+        example: "Room 10, Building C"
+        description: "Default value"
+      canVolunteer:
+        type: "boolean"
+        description: "Default value"
+      canParticipate:
+        type: "boolean"
+        description: "Default value"
+      canRequestAppointments:
+        type: "boolean"
+        description: "Default value."
+      appointmentRequests:
+        type: "array"
         items:
-          $ref: '#/definitions/Consultation'  
+          $ref: "#/definitions/Consultation"
       editions:
-        type: array
-        readOnly: true
+        type: "array"
         items:
-          $ref: '#/definitions/ActivityEdition' 
-          
+          $ref: "#/definitions/ActivityEdition"
   ActivityEdition:
     properties:
-      id:
-        allOf:
-          - $ref: '#/definitions/ResourceId'
-          - readOnly: true
-      startDate:
-        allOf:
-          - $ref: '#/definitions/UserTimestamp'   
-      endDate:
-        allOf:
-          - $ref: '#/definitions/UserTimestamp'        
       status:
-        type: string  
+        type: "string"
         enum:
-        - confirmed
-        - finished        
-        - cancelled
-        - postponed  
+        - "confirmed"
+        - "finished"
+        - "cancelled"
+        - "postponed"
       location:
-        type: string   
-        example: Room 22, Building B 
-      canVolunteer: 
-        description: Values for the especific edition.       
-        type: boolean
-      canParticipate: 
-        description: Values for the especific edition. 
-        type: boolean
-      canRequestAppointments: 
-        description: Values for the especific edition.       
-        type: boolean            
+        type: "string"
+        example: "Room 22, Building B"
+      canVolunteer:
+        type: "boolean"
+        description: "Values for the especific edition."
+      canParticipate:
+        type: "boolean"
+        description: "Values for the especific edition."
+      canRequestAppointments:
+        type: "boolean"
+        description: "Values for the especific edition."
       participants:
-        type: array
-        readOnly: true
+        type: "array"
         items:
-          $ref: '#/definitions/ActivityParticipation'  
-      appointments: 
-        type: array
-        readOnly: true
+          $ref: "#/definitions/ActivityParticipation"
+      appointments:
+        type: "array"
         items:
-          $ref: '#/definitions/Consultation'  
+          $ref: "#/definitions/Consultation"
       comments:
-        type: array
-        readOnly: true
+        type: "array"
         items:
-          $ref: '#/definitions/UserComment' 
+          $ref: "#/definitions/UserComment"
       multimedia:
-        type: array
-        readOnly: true
+        type: "array"
         items:
-          $ref: '#/definitions/MultimediaAttachment'           
-          
+          $ref: "#/definitions/MultimediaAttachment"
   ActivityParticipation:
     required:
-      - role
+    - "role"
     properties:
-      id:
-        allOf:
-          - $ref: '#/definitions/ResourceId'
-          - readOnly: true   
-      participant:
-        allOf:      
-          - $ref: '#/definitions/User'
-          - type : object
-            required:
-              - id
-      createdOn:
-        allOf:
-          - $ref: '#/definitions/ServerTimestamp'   
-      participatedOn:
-        allOf:
-          - $ref: '#/definitions/ServerTimestamp'   
       status:
-        type: string  
+        type: "string"
         enum:
-        - confirmed
-        - cancelled
-        - planned   
+        - "confirmed"
+        - "cancelled"
+        - "planned"
       role:
-        type: string  
+        type: "string"
         enum:
-        - attendee
-        - volunteer
-        - organizer          
+        - "attendee"
+        - "volunteer"
+        - "organizer"
       feedback:
+        type: "string"
+        example: "ParticipationFeeedback"
         readOnly: true
-        type: string
-        example:  ParticipationFeeedback
-      
-          
-  Consultation: 
+  Consultation:
     properties:
-      id:
-        allOf:
-          - $ref: '#/definitions/ResourceId'
-          - readOnly: true 
-      requestedOn:
-        allOf:
-          - $ref: '#/definitions/ServerTimestamp'         
-      requestedFor:
-        allOf:
-          - $ref: '#/definitions/UserTimestamp'  
-      scheduledFor:
-        allOf:
-          - $ref: '#/definitions/UserTimestamp'      
-      staffComment:
-        readOnly: true
-        description: Comments of the RSA Staff on the event
-        allOf: 
-          - $ref: '#/definitions/UserComment'
       requestedBy:
-        $ref: '#/definitions/User'           
-          
+        $ref: "#/definitions/User"
   MultimediaAttachment:
     required:
-      - mimeType
-      - url
+    - "mimeType"
+    - "url"
     properties:
-      id:
-        allOf:
-          - $ref: '#/definitions/ResourceId'
-          - readOnly: true   
       uploadedBy:
-        $ref: '#/definitions/User'
-      uploadedOn:
-        allOf:
-          - $ref: '#/definitions/ServerTimestamp'       
+        $ref: "#/definitions/User"
       mimeType:
-        type: string
-        example:  image/jpeg    
-      url : 
-        type: string
-        format: url
-        
+        type: "string"
+        example: "image/jpeg"
+      url:
+        type: "string"
+        format: "url"
   CalendarEntry:
     properties:
       pneeds:
-        type: array
+        type: "array"
         items:
-          $ref : '#/definitions/CalendarEntryPneeds'
+          $ref: "#/definitions/CalendarEntryPneeds"
       hstatus:
-        type: array
+        type: "array"
         items:
-          $ref : '#/definitions/CalendarEntryHstatus'
+          $ref: "#/definitions/CalendarEntryHstatus"
       activities:
-        type: array
+        type: "array"
         items:
-          $ref : '#/definitions/CalendarEntryActivity'          
+          $ref: "#/definitions/CalendarEntryActivity"
   CalendarEntryPneeds:
     properties:
       name:
-        type: string
-        example:  Lunch     
+        type: "string"
+        example: "Lunch"
       category:
-        type: string
-        example:  Meals          
+        type: "string"
+        example: "Meals"
       startDate:
-        type: string
-        format: date-time    
+        type: "string"
+        format: "date-time"
       endDate:
-        type: string
-        format: date-time       
-      type : 
-        $ref : '#/definitions/EventType'
-      event : 
-        $ref : '#/definitions/PrimaryNeed'
+        type: "string"
+        format: "date-time"
+      type:
+        $ref: "#/definitions/EventType"
+      event:
+        $ref: "#/definitions/PrimaryNeed"
   CalendarEntryHstatus:
     properties:
       name:
-        type: string
-        example:  Blood pressure Measurement   
+        type: "string"
+        example: "Blood pressure Measurement"
       category:
-        type: string
-        example:  Bio-messures          
+        type: "string"
+        example: "Bio-messures"
       startDate:
-        type: string
-        format: date-time    
+        type: "string"
+        format: "date-time"
       endDate:
-        type: string
-        format: date-time       
-      type : 
-        $ref : '#/definitions/EventType'        
-      event : 
-        $ref : '#/definitions/HealthStatus'
+        type: "string"
+        format: "date-time"
+      type:
+        $ref: "#/definitions/EventType"
+      event:
+        $ref: "#/definitions/HealthStatus"
   CalendarEntryActivity:
     properties:
       name:
-        type: string
-        example:  Recita del Rosario     
+        type: "string"
+        example: "Recita del Rosario"
       category:
-        type: string
-        example:  Religious          
+        type: "string"
+        example: "Religious"
       startDate:
-        type: string
-        format: date-time    
+        type: "string"
+        format: "date-time"
       endDate:
-        type: string
-        format: date-time       
-      activity : 
-        $ref : '#/definitions/Activity'     
-        
+        type: "string"
+        format: "date-time"
+      activity:
+        $ref: "#/definitions/Activity"
   UserComment:
     required:
-    - comment
+    - "comment"
     properties:
-      id:
-        allOf:
-          - $ref: '#/definitions/ResourceId'
-          - readOnly: true  
-      createdBy:
-        allOf:      
-          - $ref: '#/definitions/User'
-          - type : object
-            required:
-              - id
-      createdOn:
-        allOf:
-          - $ref: '#/definitions/ServerTimestamp'       
       comment:
-        type: string
-        example:  The resident is doing great  
-        
+        type: "string"
+        example: "The resident is doing great"
   Feedback:
     properties:
-      id:
-        allOf:
-          - $ref: '#/definitions/ResourceId'
-          - readOnly: true
       subject:
-        type: string
-        example:  Recita del Santo Rosario         
+        type: "string"
+        example: "Recita del Santo Rosario"
       feedbackBy:
-        $ref: '#/definitions/User'
+        $ref: "#/definitions/User"
       feedbackOnStaff:
-        $ref: '#/definitions/User'
+        $ref: "#/definitions/User"
       feedbackOnPN:
-        $ref: '#/definitions/PrimaryNeed'        
+        $ref: "#/definitions/PrimaryNeed"
       feedbackOnHS:
-        $ref: '#/definitions/HealthStatus'                
+        $ref: "#/definitions/HealthStatus"
       feedbackOnActivity:
-        $ref: '#/definitions/Activity'                
-      createdOn:
-        allOf:
-          - $ref: '#/definitions/ServerTimestamp'     
-      rating :
-        type: integer
+        $ref: "#/definitions/Activity"
+      rating:
+        type: "integer"
       comments:
-        readOnly: true      
-        type: array
+        type: "array"
         items:
-          $ref: '#/definitions/UserComment'
-          
+          $ref: "#/definitions/UserComment"
   RSAInfo:
     properties:
-      id:
-        allOf:
-          - $ref: '#/definitions/ResourceId'
-          - readOnly: true
       name:
-        type: string
-        example:  Trentino RSA            
+        type: "string"
+        example: "Trentino RSA"
       description:
-        type: string
-        example: Funded in 1920, the Trentino RSA excells in ...
-      staff : 
-        type: array
+        type: "string"
+        example: "Funded in 1920, the Trentino RSA excells in ..."
+      staff:
+        type: "array"
         items:
-          $ref: '#/definitions/User'
-      contactInfos : 
-        type: array
+          $ref: "#/definitions/User"
+      contactInfos:
+        type: "array"
         items:
-          $ref: '#/definitions/ContactInfo'
-          
+          $ref: "#/definitions/ContactInfo"
   ContactInfo:
     properties:
       type:
-        type: string
-        example:  email
+        type: "string"
+        example: "email"
       value:
-        type: string
-        example:  rsadmin@gmail.com        
-      
+        type: "string"
+        example: "rsadmin@gmail.com"
   User:
     properties:
-      id:
-        allOf:
-          - $ref: '#/definitions/ResourceId'
       name:
-        type: string    
+        type: "string"
       role:
-        type: string  
-        example: resident
-      contactInfos : 
-        type: array
-        readOnly : true
+        type: "string"
+        example: "resident"
+      contactInfos:
+        type: "array"
         items:
-          $ref: '#/definitions/ContactInfo'        
-        
+          $ref: "#/definitions/ContactInfo"
   SynchInfo:
-    description: Resource representing the sharing information for a specific event 
     properties:
       isShareable:
-        description: Indicates whether the event is shareable
-        type: boolean
+        type: "boolean"
+        description: "Indicates whether the event is shareable"
       eventConfig:
-        $ref: '#/definitions/EventSharingConfig'
+        $ref: "#/definitions/EventSharingConfig"
       sendTo:
-        description: Information about the people the event should be shared with
-        type: array
+        type: "array"
+        description: "Information about the people the event should be shared with"
         items:
-          $ref: '#/definitions/PersonSharingConfig'
-
+          $ref: "#/definitions/PersonSharingConfig"
+    description: "Resource representing the sharing information for a specific event"
   EventSharingConfig:
-    description: Resource representing the event sharing configuration of the RSA
-    properties:    
-      id:
-        allOf: 
-          - $ref: '#/definitions/ResourceId'
-          - readOnly: true 
-      name:
-        type: string   
-        description: Name of the Event sharing configuration
-      description:
-        type: string
-        description: Description of the Event sharing configuration
-      currentSetting: 
-        $ref: '#/definitions/EventSharingConfigSettings'
-        
-  PersonSharingConfig:   
-    description: Resource representing sharing information of the family member
     properties:
-      id:
-        allOf: 
-          - $ref: '#/definitions/ResourceId'
-          - readOnly: true     
-      contact:
-        $ref: '#/definitions/User'
-      relationship:
-        type: string
-        description: Relationship of the family member with the resident
-        example: dougther
-      preference:
-        $ref: '#/definitions/PersonSharingPreference'
-      persona:
-        $ref: '#/definitions/EventSharingPersona'
-        
-  EventSharingPersona:
-    properties:    
-      id:
-        allOf: 
-          - $ref: '#/definitions/ResourceId'
-          - readOnly: true    
       name:
-        type: string   
-        description: Name of the Sharing Persona
-      suggestion:
-        type: string
-        description: Written suggestions on how to deal with this "Persona"
-      expectedReactions:
-        type: array
-        description: List of potential reactions of this "Persona"
-        items: 
-          type: string
-        example: [worry]
-      members:
-        type: array
-        readOnly: true  
-        description: List of family members belonging to this "Persona"
-        items:
-          $ref: '#/definitions/User'
-          
-  EventSharingConfigSettings:
-    description: Detailed settings of a sharing configuration
-    properties:  
-      id:
-        allOf: 
-          - $ref: '#/definitions/ResourceId'
-          - readOnly: true   
-      name:
-        type: string  
-        description: Name of this version of the settings
+        type: "string"
+        description: "Name of the Event sharing configuration"
       description:
-        type: string
-        description: Description of this version of the settings
-      startDate:
-        allOf:
-          - $ref: '#/definitions/UserTimestamp'   
-      endDate:
-        allOf:
-          - $ref: '#/definitions/UserTimestamp'  
+        type: "string"
+        description: "Description of the Event sharing configuration"
+      currentSetting:
+        $ref: "#/definitions/EventSharingConfigSettings"
+    description: "Resource representing the event sharing configuration of the RSA"
+  PersonSharingConfig:
+    properties:
+      contact:
+        $ref: "#/definitions/User"
+      relationship:
+        type: "string"
+        example: "dougther"
+        description: "Relationship of the family member with the resident"
+      preference:
+        $ref: "#/definitions/PersonSharingPreference"
+      persona:
+        $ref: "#/definitions/EventSharingPersona"
+    description: "Resource representing sharing information of the family member"
+  EventSharingPersona:
+    properties:
+      name:
+        type: "string"
+        description: "Name of the Sharing Persona"
+      suggestion:
+        type: "string"
+        description: "Written suggestions on how to deal with this \"Persona\""
+      expectedReactions:
+        type: "array"
+        example:
+        - "worry"
+        description: "List of potential reactions of this \"Persona\""
+        items:
+          type: "string"
+      members:
+        type: "array"
+        description: "List of family members belonging to this \"Persona\""
+        items:
+          $ref: "#/definitions/User"
+  EventSharingConfigSettings:
+    properties:
+      name:
+        type: "string"
+        description: "Name of this version of the settings"
+      description:
+        type: "string"
+        description: "Description of this version of the settings"
       isActive:
-        type: boolean
-        description: Indicates whether the current setting is active
+        type: "boolean"
+        description: "Indicates whether the current setting is active"
       isShareable:
-        type: boolean   
-        description: Indicates whether the event is shareable
+        type: "boolean"
+        description: "Indicates whether the event is shareable"
       reqConfirmation:
-        type: boolean
-        description: Indicates whether the event sharing requires confirmation. If not, the event is shared automatically.
+        type: "boolean"
+        description: "Indicates whether the event sharing requires confirmation. If\
+          \ not, the event is shared automatically."
       reqStaffComment:
-        type: boolean
-        description: Indicates whether the event sharing requires the staff personalised comment
+        type: "boolean"
+        description: "Indicates whether the event sharing requires the staff personalised\
+          \ comment"
       shareOnInsert:
-        type: boolean
-        description: Indicates whether the event should be shared at the moment it is entered in the system.
+        type: "boolean"
+        description: "Indicates whether the event should be shared at the moment it\
+          \ is entered in the system."
       optSnooze:
-        type: boolean  
-        description: Indicates whether the event sharing can be delayed (snoozed) by the Staff
+        type: "boolean"
+        description: "Indicates whether the event sharing can be delayed (snoozed)\
+          \ by the Staff"
       optCancel:
-        type: boolean  
-        description: Indicates whether the event sharing can be cancelled by the Staff
+        type: "boolean"
+        description: "Indicates whether the event sharing can be cancelled by the\
+          \ Staff"
       shareInApp:
-        type: boolean    
-        description: Indicates whether the event should be shared via the Traduttore app
+        type: "boolean"
+        description: "Indicates whether the event should be shared via the Traduttore\
+          \ app"
       shareInCall:
-        type: boolean   
-        description: Indicates whether the event should be shared via phone call
+        type: "boolean"
+        description: "Indicates whether the event should be shared via phone call"
       shareInSM:
-        type: boolean
-        description: Indicates whether the event should be shared via a messaging app (e.g., WhatsApp)
+        type: "boolean"
+        description: "Indicates whether the event should be shared via a messaging\
+          \ app (e.g., WhatsApp)"
       extraParams:
-        type: array
-        description: Defines the event-specific parameters required
+        type: "array"
+        description: "Defines the event-specific parameters required"
         items:
-          $ref: '#/definitions/EventSharingExtraParam'
-        
+          $ref: "#/definitions/EventSharingExtraParam"
+    description: "Detailed settings of a sharing configuration"
   EventSharingExtraParam:
-    description: Resource representing the extra input params for a event sharing
     required:
-      - name
-      - title
-      - type
-    properties:    
-      id:
-        allOf: 
-          - $ref: '#/definitions/ResourceId'
-          - readOnly: true   
+    - "name"
+    - "title"
+    - "type"
+    properties:
       name:
-        type: string
-        description: Name of the parameter
+        type: "string"
+        description: "Name of the parameter"
       title:
-        type: string
-        description: Title that will be shown when requesting the parameter       
+        type: "string"
+        description: "Title that will be shown when requesting the parameter"
       type:
-        type: string   
-        description: Type of parameter
-        example: InputText
-        
-  PersonSharingPreference:     
-    description: Resource representing the sharing preferences of the family member
-    properties: 
+        type: "string"
+        example: "InputText"
+        description: "Type of parameter"
+    description: "Resource representing the extra input params for a event sharing"
+  PersonSharingPreference:
+    properties:
       shareWithMe:
-        type: boolean    
-        description: Indicates whether the person wants to be informed of this event
+        type: "boolean"
+        description: "Indicates whether the person wants to be informed of this event"
       shareInApp:
-        type: boolean          
-        description: Person preference towards being informed via the Traduttore app
+        type: "boolean"
+        description: "Person preference towards being informed via the Traduttore\
+          \ app"
       shareInCall:
-        type: boolean        
-        description: Person preference towards being informed via phone call
+        type: "boolean"
+        description: "Person preference towards being informed via phone call"
       shareInSM:
-        type: boolean
-        description: Person preference towards being informed via messaging apps
-        
+        type: "boolean"
+        description: "Person preference towards being informed via messaging apps"
+    description: "Resource representing the sharing preferences of the family member"
   EventSharing:
-    properties: 
-      id:
-        allOf: 
-          - $ref: '#/definitions/ResourceId'
-          - readOnly: true         
-      eventIdCartella:
-        description: Event identifier in the Cartella system
-        allOf: 
-          - $ref: '#/definitions/CartellaId'
-      resident:
-        description: Resident that is affected by the event
-        allOf: 
-          - $ref: '#/definitions/User'  
-      createdOn:
-        description: Event creation datetime
-        allOf:
-          - $ref: '#/definitions/ServerTimestamp' 
-      currentPhase :
-        description: Current phase in the event process (if any)
-        type: string
+    properties:
+      currentPhase:
+        type: "string"
+        description: "Current phase in the event process (if any)"
       updates:
-        type: array
-        description: Event updates, containing the actual event data
-        readOnly: true
+        type: "array"
+        description: "Event updates, containing the actual event data"
         items:
-          $ref: '#/definitions/EventSharingUpdate'          
-        
+          $ref: "#/definitions/EventSharingUpdate"
   EventSharingUpdate:
-    properties: 
-      id:
-        allOf: 
-          - $ref: '#/definitions/ResourceId'
-          - readOnly: true
+    properties:
       status:
-        type: string
-        description: Indicates thestatus of the event update "sharing"
+        type: "string"
+        description: "Indicates thestatus of the event update \"sharing\""
         enum:
-        - shared
-        - snoozed
-        - cancelled
-      phase : 
-        type: string        
-        description: Indicates the phase this event update is related to
-      createdOn:
-        allOf:
-          - $ref: '#/definitions/ServerTimestamp' 
-      createdBy:
-        description: Staff member who created the event update
-        allOf:      
-          - $ref: '#/definitions/User'      
-      statusChangedOn:
-        allOf:
-          - $ref: '#/definitions/ServerTimestamp'  
-      statusChangedBy:
-        description: Staff member who last updated the status of the event update
-        allOf:
-          - $ref: '#/definitions/User'           
+        - "shared"
+        - "snoozed"
+        - "cancelled"
+      phase:
+        type: "string"
+        description: "Indicates the phase this event update is related to"
       staffComment:
-        description: Staff comments and notes on the event update (mandatory if reqStaffComment) 
-        type: string        
+        type: "string"
+        description: "Staff comments and notes on the event update (mandatory if reqStaffComment)"
       staffInternalNote:
-        description: Staff comments for audit purposes 
-        type: string                
+        type: "string"
+        description: "Staff comments for audit purposes"
       sharedFrom:
-        description: Encodes from where in the Cartella the event was shared
-        type: string
+        type: "string"
+        description: "Encodes from where in the Cartella the event was shared"
       sharedInApp:
-        description: Indicates whether the event udpate was shared via Traduttore
-        type: boolean          
+        type: "boolean"
+        description: "Indicates whether the event udpate was shared via Traduttore"
       sharedInCall:
-        description: Indicates whether the event was communicated via phone call
-        type: boolean                  
+        type: "boolean"
+        description: "Indicates whether the event was communicated via phone call"
       sharedInSM:
-        description: Indicates whether the event was communicated via messaging
-        type: boolean
+        type: "boolean"
+        description: "Indicates whether the event was communicated via messaging"
       updateData:
-        type: array
-        description: Data to be shared
+        type: "array"
+        description: "Data to be shared"
         items:
-          $ref: '#/definitions/EventSharingUpdateDetail'   
-          
+          $ref: "#/definitions/EventSharingUpdateDetail"
   EventSharingUpdateDetail:
-    description: Resource representing the event update data to be shared
-    properties:    
-      id:
-        allOf: 
-          - $ref: '#/definitions/ResourceId'
-          - readOnly: true
+    properties:
       name:
-        type: string
-        description: Name of the parameter (to match the EventSharingExtraParam)
+        type: "string"
+        description: "Name of the parameter (to match the EventSharingExtraParam)"
       value:
-        type: string    
-        description: Value of the parameter
-  
-  # Reusable extensions  
-  
+        type: "string"
+        description: "Value of the parameter"
+    description: "Resource representing the event update data to be shared"
   ResourceId:
-    type: string
-    format: uuid
-    example: d290f1ee-6c54-4b01-90e6-d701748f0851  
-    
+    type: "string"
+    format: "uuid"
+    example: "\"d290f1ee-6c54-4b01-90e6-d701748f0851\""
   ServerTimestamp:
-    type: string
-    format: date-time      
-    readOnly: true
-
+    type: "string"
+    format: "date-time"
   UserTimestamp:
-    type: string
-    format: date-time  
-    
+    type: "string"
+    format: "date-time"
   CartellaId:
-    type: integer
-    example: 11
-    
-  # Standard response resources
+    type: "integer"
+    example: "11"
   Error:
     properties:
-      status: 
-        type: integer
-        minimum: 100
-        maximum: 600
+      status:
+        type: "integer"
+        minimum: 100.0
+        maximum: 600.0
       error:
-        type: string
-
-  
-# Added by API Auto Mocking Plugin
-host: virtserver.swaggerhub.com
-# basePath: /api/v1.0/
-schemes:
- - https
-# Added by API Auto Mocking Plugin
-# basePath: /api/v1.0/
-# Added by API Auto Mocking Plugin
-basePath: /mbaezpy/Traduttore/1.0.0
+        type: "string"
+parameters:
+  limitCollection:
+    name: "limit"
+    in: "query"
+    description: "Max number of records to return"
+    required: false
+    type: "integer"
+    format: "int32"
+  skipCollection:
+    name: "skip"
+    in: "query"
+    description: "Number of records to skip"
+    required: false
+    type: "integer"
+    format: "int32"
+responses:
+  AccessForbidden:
+    description: "Access forbidden, invalid authorisation header"
+    schema:
+      $ref: "#/definitions/Error"
+  BadRequest:
+    description: "Request was sent in incorrect format"
+    schema:
+      $ref: "#/definitions/Error"
+  InvalidDataError:
+    description: "Invalid data was sent"
+    schema:
+      $ref: "#/definitions/Error"
+  NotFound:
+    description: "Resource was not found"
+    schema:
+      $ref: "#/definitions/Error"
