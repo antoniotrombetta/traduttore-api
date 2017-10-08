@@ -1,0 +1,11 @@
+{
+  "generator-openapi-repo": {
+    "importExistingSpec": true,
+    "importedSpec": "/Users/baez/Downloads/mbaezpy-Traduttore-1.0.0-swagger-3.yaml",
+    "name": "Traduttore",
+    "repo": "mbaezpy/traduttore-api",
+    "splitSpec": true,
+    "samples": false,
+    "installSwaggerUI": true
+  }
+}
