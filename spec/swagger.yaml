@@ -10,7 +10,7 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "virtserver.swaggerhub.com"
+host: "traduttore-api.herokuapp.com"
 basePath: "/mbaezpy/Traduttore/1.0.0"
 tags:
 - name: "cartella"
@@ -30,6 +30,8 @@ paths:
       summary: Get the sharing information for an event and resident
       description: |
         This function provides information about whether to share a specific event instance, and the sharing settings, including how, and with whom to share.
+      operationId: getShareable
+      x-swagger-router-controller: Cartella
       produces:
       - application/json
       parameters:
@@ -150,7 +152,7 @@ paths:
     post:
       tags:
       - cartella          
-      summary: Pushes event updates from the Cartella to the Collegamenti platform
+      summary: Pushe event updates from the Cartella to the Collegamenti platform
       description: |
         This function allows NH staff to push follow up on events to the Collegamenti platform, so it can be distributed to the family members.
       consumes:
@@ -187,7 +189,7 @@ paths:
     put:
       tags:
       - cartella          
-      summary: Updates pending event updates, especially to decide on whether to share or cancel pending communications
+      summary: Update pending event updates, especially to decide on whether to share or cancel pending communications
       description: |
         This function allows NH staff to decide on the pending communications, either to cancell the sharing or to push them to the family members.
       consumes:

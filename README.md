@@ -8,7 +8,14 @@ Follow the links to have access to the related resources.
 A diagram illustrating the Resource model can be found in the figures folder.
 To edit the file use http://draw.io
 
-## Links
+
+## Mock Server
+A mock server running on the latest specification is deployed at:
+https://traduttore-api.herokuapp.com/api/v1.0/
+
+The mock server is hosted at: https://github.com/mbaezpy/traduttore-api-mock
+
+## API Specification
 
 - Documentation(ReDoc): https://mbaezpy.github.io/traduttore-api/
 - SwaggerUI: https://mbaezpy.github.io/traduttore-api/swagger-ui/
