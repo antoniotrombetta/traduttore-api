@@ -11,7 +11,7 @@ info:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 host: "traduttore-api.herokuapp.com"
-basePath: "/mbaezpy/Traduttore/1.0.0"
+basePath: "/api/v1.0"
 tags:
 - name: "cartella"
   description: "These set of operations serve the integration needs with the Cartella\
@@ -1980,6 +1980,8 @@ definitions:
     type: "integer"
     example: "11"
   Error:
+    type:
+      object    
     properties:
       status:
         type: "integer"
