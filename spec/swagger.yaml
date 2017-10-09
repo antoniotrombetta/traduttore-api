@@ -2,7 +2,7 @@
 swagger: "2.0"
 info:
   description: "# Introduction\nThis document describes the programmatic interface\
-    \ of the Traduttore service\n"
+    \ of the Traduttore service.\n The API has three differentiated type of clients: \n - *Cartella*: A set of APIs that facilitates integration with the Cartella system and any other healthcare system.\n - *Mobile*: A set of APIs prepared for the ecosystem of mobile applications built on top of the Collegamenti platform.\n - *Admin*: A set of APIs designed for addressing administrative, audit and configuration needs of the platform."
   version: "1.0.0"
   title: "Traduttore API"
   contact:
@@ -222,7 +222,7 @@ paths:
       - mobile
       summary: Get a filtered list of events (pneeds or hstatus) and activities
       description: |
-        Filters the list of activities and events, filtered by type of "entry" (pneeds, hstatus, activities)  and date
+        Filters the list of activities and events, filtered by type of "entry" (pneeds, hstatus, activities)  and date. The Calendar also retrieves the list of future events, extrapolated from the event and activity type "frequency" information.
       operationId: getCalendarEvents
       produces:
       - application/json
@@ -1138,6 +1138,7 @@ definitions:
         example: mild consequences
       updates:
         type: array
+        description: Historical information about the various updates on the health status event
         items:
            $ref: '#/definitions/EventUpdate'     
   EventUpdate:
@@ -1159,13 +1160,13 @@ definitions:
       indicators :
         readOnly: true
         type : array
-        description: Textual indication of the severity of the event
+        description: Main "numeric" indicators summarising the event at the time of the update
         items :
           $ref: '#/definitions/EventExtraParams'
       severity :
         readOnly: true
         type : string
-        description: Textual indication of the current severity of the event
+        description: Textual indication of the severity of the event at the time of the update
         example: mild consequences
       details:
         readOnly: true
@@ -1185,21 +1186,27 @@ definitions:
           - $ref: '#/definitions/ResourceId'
       name:
         type: string
+        description: Name of the event type        
         example: Lunch
       description:
         type: string
+        description: Description of the event type        
         example:  Daily lunch
       explanation:
         type: string
+        description: Default explanation of the event type         
         example:  Meals are personalised to the nutritional needs of each resident. Residents are expected to eat 75% of their meals.
       category:
         type: string
+        description: Category of the event type, used for grouping events        
         example: Meals
       startDate:
+        description: Date the event type started to be in effect      
         allOf: 
           - $ref: '#/definitions/UserTimestamp'
       repeatsEvery:
-        type: string        
+        type: string   
+        description: Frequency at which the event takes place        
         example:  daily
         enum:
         - daily
@@ -1207,7 +1214,8 @@ definitions:
         - monthly        
         - yearly
       repeatsOn:
-        type: array        
+        type: array     
+        description: Days the event is repeated in a week        
         example:  [Monday, Tuesday] 
         items:
           type: string
@@ -1233,15 +1241,19 @@ definitions:
         $ref: '#/definitions/User'
       name:
         type: string
+        description: Name of the event parameter (as displayed)
         example:  Meal Completeness        
       description:
         type: string
+        description: Description of the event parameter
         example:  Portion of the meal eaten
       valueText:
         type: string
+        description: Value of the parameter if in textual form
       valueNum:
         type: integer
-        format: int64 
+        format: int64
+        description: Value of the parameter if in numeric form
   Activity:
     type:
       object  
@@ -1256,25 +1268,32 @@ definitions:
           - $ref: '#/definitions/ResourceId'
           - readOnly: true
       createdOn:
+        description: Datetime when the activity was created
         allOf:
           - $ref: '#/definitions/ServerTimestamp'   
       duration:
         type: string  
+        description: Duration of the event in hours
       name:
         type: string
+        description: Name of the activity (as displayed)
         example: Recita del rosario
       description:
         type: string
+        description: Description of the activity (as displayed)
         example:  Recita del santo rosario organizato dalle nonne
       benefits:
         type: string
+        description: Explanation of the benefits of the activity (to inform family members)
         example:  Spiritual support is important
       category:
         type: string
+        description: Category of the activity, to group and filter activities
         example: Religious   
       repeatsEvery:
-        type: string        
-        example:  daily
+        type: string   
+        description: Frequency at which the activity takes place            
+        example:  weekly
         enum:
         - daily
         - weekly
@@ -1282,6 +1301,7 @@ definitions:
         - yearly
       repeatsOn:
         type: array        
+        description: Days the event is repeated in a week             
         example:  [Monday, Tuesday] 
         items:
           type: string
@@ -1294,27 +1314,29 @@ definitions:
           - Saturday
           - Sunday
       location:
-        description: Default value      
+        description: Location where the activity takes place (Default value)      
         type: string
         example: Room 10, Building C  
       canVolunteer: 
-        description: Default value
+        description: Indicates whether the FM can volunteer (Default value)
         type: boolean
       canParticipate: 
-        description: Default value
+        description: Indicates whether the FM can participate of the activity (Default value)
         type: boolean
       canRequestAppointments: 
-        description: Default value.       
+        description: Indicates whether the activity is a consultation        
         type: boolean    
       organisedBy:
         $ref: '#/definitions/User'
       appointmentRequests : 
         type: array
+        description: Appointment requests on the consultation. Allowed only if (canRequestAppointments=true) 
         readOnly: true
         items:
           $ref: '#/definitions/Consultation'  
       editions:
         type: array
+        description: Instances of the activity on a specific date and time 
         readOnly: true
         items:
           $ref: '#/definitions/ActivityEdition' 
@@ -1327,13 +1349,16 @@ definitions:
           - $ref: '#/definitions/ResourceId'
           - readOnly: true
       startDate:
+        description: Actual start date of the activity
         allOf:
           - $ref: '#/definitions/UserTimestamp'   
       endDate:
+        description: Actual end date of the activity
         allOf:
           - $ref: '#/definitions/UserTimestamp'        
       status:
-        type: string  
+        type: string 
+        description: Current status of the activity
         enum:
         - confirmed
         - finished        
@@ -1343,31 +1368,35 @@ definitions:
         type: string   
         example: Room 22, Building B 
       canVolunteer: 
-        description: Values for the especific edition.       
+        description: Indicates whether the FM can volunteer (value for the especific edition)       
         type: boolean
       canParticipate: 
-        description: Values for the especific edition. 
+        description: Indicates whether the FM can participate of the activity (value for the especific edition) 
         type: boolean
       canRequestAppointments: 
-        description: Values for the especific edition.       
+        description: Indicates whether the activity is a consultation (value for the especific edition)    
         type: boolean            
       participants:
         type: array
+        description: List of participants to the activity edition (not available for consultations)
         readOnly: true
         items:
           $ref: '#/definitions/ActivityParticipation'  
       appointments: 
         type: array
+        description: List of appointments to the specific consultation date (available only if canRequestAppointments=true)
         readOnly: true
         items:
           $ref: '#/definitions/Consultation'  
       comments:
         type: array
+        description: Announcements and comments on the event edition
         readOnly: true
         items:
           $ref: '#/definitions/UserComment' 
       multimedia:
         type: array
+        description: Multimedia attachments to be displayed in the activity edition page
         readOnly: true
         items:
           $ref: '#/definitions/MultimediaAttachment'  
@@ -1384,23 +1413,27 @@ definitions:
       participant:
         $ref: '#/definitions/User'
       createdOn:
+        description: Datetime the activity participation was created
         allOf:
           - $ref: '#/definitions/ServerTimestamp'   
       participatedOn:
+        description: Datetime the user (participant) participated
         allOf:
           - $ref: '#/definitions/ServerTimestamp'   
       status:
-        type: string  
+        type: string 
+        description: Current status of the participation
         enum:
         - confirmed
         - cancelled
         - planned   
       role:
         type: string  
+        description: Role of the user in the activity edition
         enum:
         - attendee
         - volunteer
-        - organizer          
+        - organiser          
       feedback:
         readOnly: true
         type: string
@@ -1414,17 +1447,20 @@ definitions:
           - $ref: '#/definitions/ResourceId'
           - readOnly: true 
       requestedOn:
+        description: Datetime the consultation requested was created
         allOf:
           - $ref: '#/definitions/ServerTimestamp'         
       requestedFor:
+        description: Date requested for the consultation
         allOf:
           - $ref: '#/definitions/UserTimestamp'  
       scheduledFor:
+        description: Date assigned for the consultation
         allOf:
           - $ref: '#/definitions/UserTimestamp'      
       staffComment:
         readOnly: true
-        description: Comments of the RSA Staff on the event
+        description: Notes of the RSA Staff on the consultation request
         allOf: 
           - $ref: '#/definitions/UserComment'
       requestedBy:
@@ -1443,13 +1479,16 @@ definitions:
       uploadedBy:
         $ref: '#/definitions/User'
       uploadedOn:
+        description: Datetime the attachment was uploaded
         allOf:
           - $ref: '#/definitions/ServerTimestamp'       
       mimeType:
         type: string
+        description: Type of attached material in mime type 
         example:  image/jpeg    
       url : 
         type: string
+        description: URL of the attachment
         format: url
   CalendarEntry:
     type:
@@ -1457,14 +1496,17 @@ definitions:
     properties:
       pneeds:
         type: "array"
+        description: List of primary needs entries
         items:
           $ref: "#/definitions/CalendarEntryPneeds"
       hstatus:
         type: "array"
+        description: List of health status entries
         items:
           $ref: "#/definitions/CalendarEntryHstatus"
       activities:
         type: "array"
+        description: List of activity entries
         items:
           $ref: "#/definitions/CalendarEntryActivity"
   CalendarEntryPneeds:
@@ -1473,15 +1515,19 @@ definitions:
     properties:
       name:
         type: "string"
+        description: Name of the entry (to be displayed in the calendar)
         example: "Lunch"
       category:
         type: "string"
+        description: Name of the category (to be displayed in the calendar)
         example: "Meals"
       startDate:
         type: "string"
+        description: Planned start date
         format: "date-time"
       endDate:
         type: "string"
+        description: Planned end date
         format: "date-time"
       type:
         $ref: "#/definitions/EventType"
@@ -1493,15 +1539,19 @@ definitions:
     properties:
       name:
         type: "string"
+        description: Name of the entry (to be displayed in the calendar)
         example: "Blood pressure Measurement"
       category:
         type: "string"
+        description: Name of the category (to be displayed in the calendar)
         example: "Bio-messures"
       startDate:
         type: "string"
+        description: Planned start date
         format: "date-time"
       endDate:
         type: "string"
+        description: Planned end date
         format: "date-time"
       type:
         $ref: "#/definitions/EventType"
@@ -1513,15 +1563,19 @@ definitions:
     properties:
       name:
         type: "string"
+        description: Name of the entry (to be displayed in the calendar)
         example: "Recita del Rosario"
       category:
         type: "string"
+        description: Name of the category (to be displayed in the calendar)
         example: "Religious"
       startDate:
         type: "string"
+        description: Planned start date
         format: "date-time"
       endDate:
         type: "string"
+        description: Planned end date
         format: "date-time"
       activity:
         $ref: "#/definitions/Activity"
@@ -1538,10 +1592,12 @@ definitions:
       createdBy:
         $ref: '#/definitions/User'
       createdOn:
+        description: Datetime the comment was created
         allOf:
           - $ref: '#/definitions/ServerTimestamp'       
       comment:
         type: string
+        description: The content of the comment
         example:  The resident is doing great  
   Feedback:
     type:
@@ -1553,6 +1609,7 @@ definitions:
           - readOnly: true
       subject:
         type: string
+        description: Subject of the feedback thread
         example:  Recita del Santo Rosario         
       feedbackBy:
         $ref: '#/definitions/User'
@@ -1569,9 +1626,11 @@ definitions:
           - $ref: '#/definitions/ServerTimestamp'     
       rating :
         type: integer
+        description: Rating of the user associated with the feedback
       comments:
         readOnly: true      
         type: array
+        description: Comment thread associated with the feedback
         items:
           $ref: '#/definitions/UserComment'
   RSAInfo:
@@ -1584,16 +1643,20 @@ definitions:
           - readOnly: true
       name:
         type: string
+        description: Name of the RSA
         example:  Trentino RSA            
       description:
         type: string
+        description: Description of the RSA
         example: Funded in 1920, the Trentino RSA excells in ...
       staff : 
         type: array
+        description: List of Staff members
         items:
           $ref: '#/definitions/User'
       contactInfos : 
         type: array
+        description: Contact information of the RSA
         items:
           $ref: '#/definitions/ContactInfo'
   ContactInfo:
@@ -1602,9 +1665,11 @@ definitions:
     properties:
       type:
         type: "string"
+        description: Type of contact information
         example: "email"
       value:
         type: "string"
+        description: Contact information
         example: "rsadmin@gmail.com"
   User:
     type:
@@ -1614,12 +1679,15 @@ definitions:
         allOf:
           - $ref: '#/definitions/ResourceId'
       name:
-        type: string    
+        type: string  
+        description: Name of the user
       role:
         type: string  
+        description: Role of the user
         example: resident
       contactInfos : 
         type: array
+        description: Contact information of the user
         readOnly : true
         items:
           $ref: '#/definitions/ContactInfo'   
