@@ -65,6 +65,8 @@ paths:
       summary: Push events from the Cartella to the Collegamenti platform
       description: |
         This operation allows NH staff to push events to the Collegamenti platform, so it can be distributed to the family members.
+      operationId: postEvent
+      x-swagger-router-controller: Cartella        
       consumes:
       - application/json
       parameters:
@@ -94,6 +96,8 @@ paths:
       summary: Search events, including pending commjunications
       description: |
         This function allows the NH Staff to search events, and especially pending communications that have been delegated to their role.
+      operationId: getEvents
+      x-swagger-router-controller: Cartella          
       produces:
       - application/json
       parameters:
@@ -127,6 +131,8 @@ paths:
       summary: Retrieve an event, along with the list of related communications
       description: |
         This function retrieves an event, along with the previous updates / communications (or sharing) of that event with the family members.
+      operationId: getEventById
+      x-swagger-router-controller: Cartella         
       produces:
       - application/json
       parameters:
@@ -155,6 +161,8 @@ paths:
       summary: Pushe event updates from the Cartella to the Collegamenti platform
       description: |
         This function allows NH staff to push follow up on events to the Collegamenti platform, so it can be distributed to the family members.
+      operationId: postEventUpdate
+      x-swagger-router-controller: Cartella           
       consumes:
       - application/json
       parameters:
@@ -192,6 +200,8 @@ paths:
       summary: Update pending event updates, especially to decide on whether to share or cancel pending communications
       description: |
         This function allows NH staff to decide on the pending communications, either to cancell the sharing or to push them to the family members.
+      operationId: putEventUpdateById
+      x-swagger-router-controller: Cartella           
       consumes:
       - application/json
       parameters:
@@ -226,6 +236,7 @@ paths:
       description: |
         Filters the list of activities and events, filtered by type of "entry" (pneeds, hstatus, activities)  and date. The Calendar also retrieves the list of future events, extrapolated from the event and activity type "frequency" information.
       operationId: getCalendarEvents
+      x-swagger-router-controller: Mobile  
       produces:
       - application/json
       parameters:
@@ -273,6 +284,7 @@ paths:
       - mobile
       summary: Get the a Primary Need event 
       operationId: getPNEvent
+      x-swagger-router-controller: Mobile
       description: |
         Retrieves the PN event identified by eventId
       produces:
@@ -302,6 +314,7 @@ paths:
       - mobile
       summary: Get a Health status event 
       operationId: getHSEvent
+      x-swagger-router-controller: Mobile
       description: |
         Obtains the HS event identified by eventId
       produces:
@@ -330,7 +343,8 @@ paths:
       - mobile
       - admins
       summary: Get an activity
-      operationId: getActivity
+      operationId: getActivityById
+      x-swagger-router-controller: Mobile
       description: |
         Retrieves the activity identified by eventId
       produces:
@@ -358,6 +372,7 @@ paths:
       - admins
       summary: Update an existing activity  
       operationId: updateActivity
+      x-swagger-router-controller: Mobile
       consumes:
       - application/json
       parameters:
@@ -382,12 +397,13 @@ paths:
           $ref: '#/responses/AccessForbidden'   
         404:
           $ref: '#/responses/NotFound'          
-  /activity:
+  /activities:
     post:
       tags:
       - admins
       summary: Create a new activity 
       operationId: createActivity
+      x-swagger-router-controller: Mobile
       consumes:
       - application/json
       parameters:
@@ -417,6 +433,7 @@ paths:
       - admins
       summary: Get the list of editions of an activity
       operationId: getActivityEditions
+      x-swagger-router-controller: Mobile
       description: |
         Retrieves the list of editions of an activity
       produces:
@@ -446,6 +463,7 @@ paths:
       - admins
       summary: Create a new activity edition
       operationId: createActivityEdition
+      x-swagger-router-controller: Mobile
       description: |
         Creates a new activity edition for the given activity      
       consumes:
@@ -484,6 +502,7 @@ paths:
       - mobile
       summary: Create an appointment request
       operationId: createAppointment
+      x-swagger-router-controller: Mobile
       description: |
         Creates a new appointment request for the given activity. Appointment requests are allowed only with "Consultation" activities (canRequestAppointment=true)
       consumes:
@@ -520,6 +539,7 @@ paths:
       - admins
       summary: Get the activity appointments
       operationId: getActivityAppointments
+      x-swagger-router-controller: Mobile
       description: |
         Retrieves the list of appointment request for a given activity         
       produces:
@@ -551,7 +571,8 @@ paths:
       - admins
       - mobile
       summary: Get the activity edition
-      operationId: getActivityEdition
+      operationId: getActivityEditionById
+      x-swagger-router-controller: Mobile
       description: |
         Retrieves an activity edition          
       produces:
@@ -579,6 +600,7 @@ paths:
       - admins
       summary: Update the activity edition
       operationId: updateActivityEdition
+      x-swagger-router-controller: Mobile
       description: |
         Updates the activity edition referenced by the uri
       consumes:
@@ -613,6 +635,7 @@ paths:
       - mobile
       summary: Get the list of participants to an activity edition
       operationId: getActivityEditionParticipations
+      x-swagger-router-controller: Mobile
       description: |
         Retrieves the list of participants to the given activity edition
       produces:
@@ -643,6 +666,7 @@ paths:
       - mobile
       summary: Create an activity participation
       operationId: addActivityEditionParticipant
+      x-swagger-router-controller: Mobile
       description: |
         Creates an activity participation on the given activity edition
       consumes:
@@ -681,7 +705,8 @@ paths:
       - admins
       - mobile
       summary: Get an activity participation
-      operationId: getActivityEditionParticipation
+      operationId: getActivityEditionParticipationById
+      x-swagger-router-controller: Mobile
       description: |
         Retrives the activity participation identified by the URI      
       produces:
@@ -710,6 +735,7 @@ paths:
       - mobile
       summary: Update an activity participation
       operationId: updateActivityEditionParticipation
+      x-swagger-router-controller: Mobile
       description: |
         Updates the activity participation identified by the URI         
       consumes:
@@ -743,7 +769,8 @@ paths:
       - mobile
       - admins
       summary: Get an appointment request
-      operationId: getAppointment
+      operationId: getAppointmentById
+      x-swagger-router-controller: Mobile
       description: |
         Gets the appointment request identified by the URI
       consumes:
@@ -772,6 +799,7 @@ paths:
       - admins
       summary: Update an appointment request
       operationId: updateAppointment
+      x-swagger-router-controller: Mobile
       description: |
         Updates the appointment request identified by the URI
       consumes:
